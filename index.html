@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <meta charset="UTF-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <title>Nomad Spaces in Neighbourhood</title>
+	    <link rel="stylesheet" href="css/main.css">
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	</head>
+	<body>
+	<div class="map"> 
+		<div class="container-fluid">
+		  <div class="row content">
+		    <div class="col-sm-3 sidenav">
+	    		<h1>Find Nomad Spaces in Neighbourhood</h1>
+	    		<div>
+					<input class="query" data-bind="addressAutocomplete: neighbourhood" id="neighbourhood-location" placeholder="Enter city">
+	          		<hr>
+	    			<select data-bind="options: nomadCatergoryOptions, optionsCaption: 'Select a Nomad Space Category', value: selectedNomadCatergory, optionsValue: 'name'"></select>
+	    			<hr>
+	    			<div class="listWrapper">
+			          <ul class="list-unstyled components" data-bind="foreach: nomadSpaces">
+			            <li data-bind="click: $parent.callMarker">
+			              <span data-bind="text: name"></span>
+			            </li>
+			          </ul>
+			        </div>
+		        </div>
+		    </div>
+
+	
+		    <div class="col-sm-9">
+		    	<div id="map"></div>
+		    </div>
+	    </div>
+
+	  </div>
+	</div>
+	   	<script src="js/lib/knockout.js"></script>
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    	<script src="js/app.js"></script>
+	    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyD0SAHgHofqNiNzsCbfxofpqLPOd52khOg&v=3&callback=initMapViewModel"
+	     async defer></script>
+	</body>
+</html>
