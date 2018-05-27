@@ -1,5 +1,8 @@
 /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
-.row.content {height: 100%}
+.row.content {
+  height: 100%;
+  overflow-y: hidden;
+}
 
 /* Set gray background color and 100% height */
 .sidenav {
@@ -14,21 +17,45 @@
 }
 
 
-/* On small screens, set height to 'auto' for sidenav and grid */
+
+/* On small screens*/
 @media screen and (max-width: 767px) {
   .sidenav {
-    height: auto;
-    padding: 15px;
+    height: 100%;
+    padding: 5px;
+    width: 100%;
   }
-  .row.content {height: auto;} 
+  .row.content {height: 100%;}
+  .col-sm-9a {
+    height: 100%;
+    width: 100%;} 
+
 }
 
-.col-sm-9 {
+.col-sm-9a {
   height: 100%;
+  width: auto;
   padding-right: 1px;
   padding-left: 1px;
 }
 
+.col-sm-3a, .col-sm-9a{
+  position: relative;
+  min-height: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+@media (min-width: 768px) {
+  .col-sm-3a {
+      float: left;
+      width: auto;
+  }
+  .col-sm-9a {
+      float: right;
+      width: 100%;
+  }
+}
 
 body, html {
   font-family: Georgia, serif;
@@ -37,12 +64,12 @@ body, html {
   margin: 0;
   padding: 0;
   font-weight: bold;
+  overflow-y: hidden;
 }
 
 .container-fluid {
   align-items: stretch;
   height: 100%;
-  overflow-y:auto;
 }
 
 input {
@@ -73,7 +100,7 @@ hr {
 }
 
 .listWrapper {
-  max-height: 65vh;
+  max-height: 69vh;
   overflow-y:auto;
 }
 
@@ -88,10 +115,13 @@ hr {
 
 .map {
     height: 100%;
+    transition: margin-left .5s;
 }
 
-.text {
-  font-size: 12px;
+.text, .query {
+  font-size: 1em;
+  font-weight: bold;
+  font-family: Georgia, serif;
 }
 
 li {
@@ -102,4 +132,31 @@ li {
 li:hover {
     color: #FFE8DC;
     background: #9D3802;
+}
+
+.projName {
+  font-size: 2em;
+  font-weight: bold;
+  font-family: Georgia, serif; 
+}
+
+.pac-container { z-index: 10000 !important; }
+
+.navbarN {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap; // allow us to do the line break for collapsing content
+  align-items: center;
+  justify-content: space-between; // space out brand from logo
+  padding: .1rem $navbar-padding-x;
+
+  // Because flex properties aren't inherited, we need to redeclare these first
+  // few properities so that content nested within behave properly.
+  > .container,
+  > .container-fluid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
 }

@@ -1,5 +1,15 @@
 var map, infoWindow;
 
+var defaultNeighbourhood = "Singapore";
+
+var neighbourhoodQuery = document.getElementById('neighbourhood-location').value;
+
+if (neighbourhoodQuery !== "") {
+	neighbourhood = neighbourhoodQuery;
+} else {
+	neighbourhood = defaultNeighbourhood;
+}
+
 var nomadSpaces = [];
 
 var NomadSpace = function(data) {
@@ -18,19 +28,8 @@ var NomadCatergory = function(data){
     self.name = ko.observable(data.name);
 };
 
-
-
-
 var ViewModel = function() {
 	var self = this;
-
-	var neighbourhoodQuery = document.getElementById('neighbourhood-location').value;
-	var defaultNeighbourhood = "Singapore";
-	if (neighbourhoodQuery !== "") {
-		neighbourhood = neighbourhoodQuery;
-	} else {
-		neighbourhood = defaultNeighbourhood;
-	}
 
 	ko.bindingHandlers.addressAutocomplete = {
 		init: function(element, valueAccessor){
@@ -46,12 +45,17 @@ var ViewModel = function() {
 		function() {
 			var place = autocomplete.getPlace();
 			var components = place.address_components;
-			for (var i = 0, component; component = components[i]; i++) {
-				 if (component.types[0] == 'locality') {
-				 	city = component['long_name'];
-				 }
+			if (components !== "") {
+				for (var i = 0, component; component = components[i]; i++) {
+					 if (component.types[0] == 'locality') {
+					 	neighbourhood = component['long_name'];
+					 }
+				}				
+			} else {
+				neighbourhood = defaultNeighbourhood;
 			}
-			value(city);
+
+			value(neighbourhood);
 			});
 		},
 			 update: function (element, valueAccessor) {
@@ -111,16 +115,8 @@ var ViewModel = function() {
 		// Initialize the geocoder.
 		var geocoder = new google.maps.Geocoder();
         // Get the address or place that the user entered.
-        var neighbourhoodQuery = document.getElementById('neighbourhood-location').value;
 
-		if (neighbourhoodQuery !== "") {
-			neighbourhood = neighbourhoodQuery;
-		} else {
-			neighbourhood = defaultNeighbourhood;
-		}
-
-
-	      geocoder.geocode(
+		geocoder.geocode(
 	        { address: neighbourhood
 	        }, function(results, status) {
 	          if (status == google.maps.GeocoderStatus.OK) {
@@ -132,7 +128,6 @@ var ViewModel = function() {
 	                ' specific place.');
 	          }
 	        });
-
 	}
 
 	function createNomadMarkers(venue) {
@@ -201,7 +196,11 @@ var ViewModel = function() {
 		var city = JSON.stringify(cityOb);
 		var	location = '&near=' + city;
 		var selectedNomadCatergory = self.selectedNomadCatergory();
-		var query = '&query=' + selectedNomadCatergory;
+		var query = '&query='+ "internet cafe";
+		if (self.selectedNomadCatergory() !== undefined) {
+			query = '&query=' + selectedNomadCatergory;
+		} 
+
 		var client_id = '&client_id=LU0BPEHF2ZC4QYCYK5OFW5PJR0DN0QQZ20L1MTRM0FNDOYAM';
 		var client_secret = '&client_secret=F1JUZOCRWJDCCNHFETDYKPV35TVRSHY4W2TSY2AJT0AFPY3I';
 		var fourSquareURL = "https://api.foursquare.com/v2/venues/explore?" + 
@@ -217,172 +216,161 @@ var ViewModel = function() {
 		 	self.nomadSpaces().forEach(function(nomadSpace) {
 	 			createNomadMarkers(nomadSpace);
 		 	});
-		 });
+		 }).fail(function() {
+        window.alert("HASTA LA VISTA, BABY");
+    });
 	}
 
 	function initNeighbourhood(neighbourhood) {
-		getNeighbourhood(neighbourhood);
-	}
+			getNeighbourhood(neighbourhood);
+		}
 
 	// google map initilisation
 	function initMap() {
 	  // Create a styles array to use with the map.
-	  var styles = [
+	var styles = [
 	    {
-	      "elementType": "geometry",
-	      "stylers": [
-	        { "color": "#1d2c4d" }
-	      ]
-	    },{
-	      "elementType": "labels.text.fill",
-	      "stylers": [
-	        { "color": "#8ec3b9" }
-	      ]
-	    },{
-	      "elementType": "labels.text.stroke",
-	      "stylers": [
-	        { "color": "#1a3646" }
-	      ]
-	    },{
-	      "featureType": "administrative.country",
-	      "elementType": "geometry.stroke",
-	      "stylers": [
-	        { "color": "#4b6878" }
-	      ]
-	    },{
-	      "featureType": "administrative.land_parcel",
-	      "elementType": "labels.text.fill",
-	      "stylers": [
-	        { "color": "#64779e" }
-	      ]
-	    },{
-	      "featureType": "administrative.province",
-	      "elementType": "geometry.stroke",
-	      "stylers": [
-	        { "color": "#4b6878" }
-	      ]
-	    },{
-	      "featureType": "landscape.man_made",
-	      "elementType": "geometry.stroke",
-	      "stylers": [
-	        { "color": "#334e87" }
-	      ]
-	    },{
-	      "featureType": "landscape.natural",
-	      "elementType": "geometry",
-	      "stylers": [
-	        { "color": "#023e58" }
-	      ]
-	    },{
-	      "featureType": "poi",
-	      "elementType": "geometry",
-	      "stylers": [
-	        { "color": "#283d6a" }
-	      ]
-	    },{
-	      "featureType": "poi",
-	      "elementType": "labels.text.fill",
-	      "stylers": [
-	        { "color": "#6f9ba5" }
-	      ]
-	    },{
-	      "featureType": "poi",
-	      "elementType": "labels.text.stroke",
-	      "stylers": [
-	        { "color": "#1d2c4d" }
-	      ]
-	    },{
-	      "featureType": "poi.park",
-	      "elementType": "geometry.fill",
-	      "stylers": [
-	        { "color": "#023e58" }
-	      ]
-	    },{
-	      "featureType": "poi.park",
-	      "elementType": "labels.text.fill",
-	      "stylers": [
-	        { "color": "#3C7680" }
-	      ]
-	    },{
-	      "featureType": "road",
-	      "elementType": "geometry",
-	      "stylers": [
-	        { "color": "#304a7d" }
-	      ]
-	    },{
-	      "featureType": "road",
-	      "elementType": "labels.text.fill",
-	      "stylers": [
-	        { "color": "#98a5be" }
-	      ]
-	    },{
-	      "featureType": "road",
-	      "elementType": "labels.text.stroke",
-	      "stylers": [
-	        { "color": "#1d2c4d" }
-	      ]
-	    },{
-	      "featureType": "road.highway",
-	      "elementType": "geometry",
-	      "stylers": [
-	        { "color": "#2c6675" }
-	      ]
-	    },{
-	      "featureType": "road.highway",
-	      "elementType": "geometry.stroke",
-	      "stylers": [
-	        { "color": "#255763" }
-	      ]
-	    },{
-	      "featureType": "road.highway",
-	      "elementType": "labels.text.fill",
-	      "stylers": [
-	        { "color": "#b0d5ce" }
-	      ]
-	    },{
-	      "featureType": "road.highway",
-	      "elementType": "labels.text.stroke",
-	      "stylers": [
-	        { "color": "#023e58" }
-	      ]
-	    },{
-	      "featureType": "transit",
-	      "elementType": "labels.text.fill",
-	      "stylers": [
-	        { "color": "#98a5be" }
-	      ]
-	    },{
-	      "featureType": "transit",
-	      "elementType": "labels.text.stroke",
-	      "stylers": [
-	        { "color": "#1d2c4d" }
-	      ]
-	    },{
-	      "featureType": "transit.line",
-	      "elementType": "geometry.fill",
-	      "stylers": [
-	        { "color": "#283d6a" }
-	      ]
-	    },{
-	      "featureType": "transit.station",
-	      "elementType": "geometry",
-	      "stylers": [
-	        { "color": "#3a4762" }
-	      ]
-	    },{
-	      "featureType": "water",
-	      "elementType": "geometry",
-	      "stylers": [
-	        { "color": "#0e1626" }
-	      ]
-	    },{
-	      "featureType": "water",
-	      "elementType": "labels.text.fill",
-	      "stylers": [
-	        { "color": "#4e6d70" }
-	      ]
+	        "featureType": "all",
+	        "elementType": "geometry",
+	        "stylers": [
+	            {
+	                "color": "#cba15f"
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "all",
+	        "elementType": "labels.text.fill",
+	        "stylers": [
+	            {
+	                "gamma": 0.01
+	            },
+	            {
+	                "lightness": 20
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "all",
+	        "elementType": "labels.text.stroke",
+	        "stylers": [
+	            {
+	                "saturation": -31
+	            },
+	            {
+	                "lightness": -33
+	            },
+	            {
+	                "weight": 2
+	            },
+	            {
+	                "gamma": 0.8
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "all",
+	        "elementType": "labels.icon",
+	        "stylers": [
+	            {
+	                "visibility": "off"
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "landscape",
+	        "elementType": "geometry",
+	        "stylers": [
+	            {
+	                "lightness": 30
+	            },
+	            {
+	                "saturation": 30
+	            },
+	            {
+	                "visibility": "on"
+	            },
+	            {
+	                "color": "#cea76a"
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "poi",
+	        "elementType": "geometry",
+	        "stylers": [
+	            {
+	                "saturation": 20
+	            },
+	            {
+	                "color": "#9a7b40"
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "poi.park",
+	        "elementType": "geometry",
+	        "stylers": [
+	            {
+	                "lightness": 20
+	            },
+	            {
+	                "saturation": -20
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "road",
+	        "elementType": "geometry",
+	        "stylers": [
+	            {
+	                "lightness": 10
+	            },
+	            {
+	                "saturation": -30
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "road",
+	        "elementType": "geometry.stroke",
+	        "stylers": [
+	            {
+	                "saturation": 25
+	            },
+	            {
+	                "lightness": 25
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "water",
+	        "elementType": "all",
+	        "stylers": [
+	            {
+	                "lightness": -20
+	            }
+	        ]
+	    },
+	    {
+	        "featureType": "water",
+	        "elementType": "geometry.fill",
+	        "stylers": [
+	            {
+	                "visibility": "on"
+	            },
+	            {
+	                "color": "#e5c590"
+	            },
+	            {
+	                "saturation": "-15"
+	            },
+	            {
+	                "lightness": "8"
+	            }
+	        ]
 	    }
-	  ];
+	];
 
 	  // constructor creates a new map - only center and zoom are required.
 	  map = new google.maps.Map(document.getElementById('map'), {
@@ -398,6 +386,7 @@ var ViewModel = function() {
 	}
 
 	initMap();
+	getNeighbourhood();
 
 }
 

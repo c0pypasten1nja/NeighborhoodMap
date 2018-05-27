@@ -6,6 +6,7 @@ Develop a single page application featuring a map of a neighborhood with functio
 This project is built with
 1. frameworks:
 	* bootstrap
+	* jasny
 2. libraries:
 	* knockout
 3. APIs:
@@ -17,11 +18,13 @@ This project is built with
 	* single page application featuring side bar and google map
 2. images folder
 	* contains images for map markers
-3. css folder
-	* contains main css style sheet
+3. css folder contains
+	* main css style sheet
+	* jasny-bootstrap
 4. js folder
 	* libraries of knockout
 	* javascript application
+	* jasny-bootstrap
 
 ### How to run the Project
 1. Download the project file.
