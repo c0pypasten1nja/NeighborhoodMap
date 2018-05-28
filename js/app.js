@@ -132,8 +132,6 @@ var ViewModel = function() {
 
 	function createNomadMarkers(venue) {
 
-		infowindow = new google.maps.InfoWindow();
-
 		var defaultIcon = 'images/yellowNomad.png';
 		// mouse over icon
 		var highlightedIcon = 'images/redNomad.png';
@@ -382,6 +380,8 @@ var ViewModel = function() {
         lng: 103.851959
       }
 	  });
+
+	infowindow = new google.maps.InfoWindow();
 	  
 	}
 
@@ -392,4 +392,8 @@ var ViewModel = function() {
 
 function initMapViewModel() {
 	ko.applyBindings(new ViewModel());
+}
+
+function googleError() {
+    window.alert("I find your lack of faith disturbing.");
 }
